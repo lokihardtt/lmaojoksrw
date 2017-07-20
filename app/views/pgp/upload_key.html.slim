@@ -1,0 +1,11 @@
+div style="margin-top: 10px;"
+= form_tag("/pgp/check_pgp_key", method: "post" ) do
+  div
+    | PGP KEY
+  div
+    - if current_user.role.eql?"Vendor"
+      = text_area_tag :key, nil, rows: 25, cols: 96, required: true
+    - else
+      = text_area_tag :key, nil, rows: 25, cols: 96
+  div
+    = submit_tag "Submit", class: "btn btn-default btn-1"

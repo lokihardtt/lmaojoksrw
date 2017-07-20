@@ -1,0 +1,40 @@
+= form_for @private_message do |f|
+  - if @private_message.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@private_message.errors.count, "error")} prohibited this private_message from being saved:"
+      ul
+        - @private_message.errors.full_messages.each do |message|
+          li = message
+
+  div style="font-size: 12px;"
+    .col-md-3
+      .field
+        = f.number_field :sender_id, value: current_user.id, style: "display:none;"
+      .field
+        - if @recieved.present?
+          = link_to "#{ @recieved.username }", show_sender_detail_path(user_id: @recieved.id)
+          = text_field_tag :receiver_name, @recieved.username, readonly: true, style: "display: none;", class: "string optional form-control"
+          = f.number_field :receiver_id, value: @recieved.id, style: "display:none;"
+        - else
+          = text_field_tag :receiver_name, '', placeholder: "To Username", id: "username", class: "string optional form-control"
+          = f.number_field :receiver_id, style: "display:none;"
+    .col-md-6
+      .field
+        = f.text_area :body, placeholder: "Enter Message", style: "width: 367px; height: 74px;", class: "text optional form-control"
+      br/
+      / .field
+      / - if @file.eql?false
+      / - else
+      /   = check_box_tag :encrypted
+      /   | &nbsp;
+      /   | Information is sensitive, encrypt with PGP key (if receiver has one)
+      / div id="show-pgp"
+      /   .well
+      /     - if @file.eql?true
+      /       = "This user has a public PGP key"
+      /     - elsif @key.present?
+      /       = @key
+      /     - else
+      /       = "This user does not have a public key"
+    .col-md-3
+      .actions = f.submit 'Send Message', class: "btn btn-success"

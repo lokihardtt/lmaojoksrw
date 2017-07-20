@@ -1,0 +1,28 @@
+- if notice
+  #notice.alert.alert-success 
+    = notice
+
+p
+  strong #{t('.name')}:
+  br/
+  = @item.name
+p
+  strong #{t('.desc')}:
+  br/
+  = @item.description.html_safe
+p
+  strong #{t('.price')}:
+  br/
+  = @item.price
+p
+  strong #{t('.from')}:
+  br/
+  = @item.ship_from
+p
+  strong #{t('.hidden')}:
+  br/
+  = @item.is_hidden
+
+= link_to "#{t('.edit')}", edit_item_path(@item)
+'|
+= link_to "#{t('.back')}", items_path

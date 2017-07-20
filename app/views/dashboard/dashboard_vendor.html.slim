@@ -1,0 +1,50 @@
+- if @blockchain_payment_method.status.eql?true
+  .alert.alert-info role="alert"
+    = "Welcome To #{@market_name.name rescue OpenFreeMarketTest}"
+    br/
+    | To make sure all bitcoin wallet function work. we need you to follow this step to enable api.
+    ul#selector
+      li = "Go to #{link_to "blockchain.info", "https://blockchain.info/wallet", :target => "_blank"}".html_safe
+      li = "Login to your wallet and use #{current_user.identifier} for your indetifier to open your wallet"
+      li = "Choose Account Settings."
+      li = "Under IP Restrictions menu checklist 'Enable Api Access'"
+    | If you still using our old wallet or your identifier still empty you can click create wallet menu
+
+div style="margin-top: 60px;"
+  table
+    - @items.each do |item|
+      tr
+        td
+          - if item.galleries.any?
+            .thumbnail style="height: 149px; width: 238px;"
+              = image_tag show_image(item.galleries.first.image.thumb.url), class: "lazy"
+          - else
+            .thumbnail style="height: 149px; width: 238px;"
+              = image_tag image_path('no_image_w_large.gif')
+        td style="vertical-align: top; width: 250px;"
+          p style="padding: 0 15px;"
+            = link_to "#{item.name}", item_detail_url(item.random_string), :"data-no-turbolink" => "true"
+        td style="vertical-align: top;"
+          - if (item.currency.eql?"Bitcoin") || (item.currency.eql?"BTC")
+            div style="float: left;"
+              = item.price_with_precision
+            div style="float: right;" 
+              | BTC
+          - else
+            div style="float: left;"
+              = item.price_with_precision
+            div style="float: right;"
+              = item.currency
+            br/
+            - group = @rates.select { |element_hash| element_hash["code"].eql?"#{item.currency}" }
+            - @price = item.price.to_f / group.first['rate'].to_f
+            div style="float: left;"
+              = convert_float_to_decimal(convert_float_to_decimal(@price).to_f.round(5))
+            div style="float: right;" 
+              | BTC
+        td style="vertical-align: top;"
+          | &nbsp; &nbsp; &nbsp;
+          = link_to "#{item.user.username}", show_sender_detail_path(user_id: item.user.id)
+          / = " #{rating(item.user.id)} #{order_size(item.user.id)} order"
+
+= paginate @items

@@ -1,0 +1,35 @@
+h4 
+  | Your Conversation with #{ link_to @user.username, show_sender_detail_path( user_id: @user.id) }
+
+table.table.table-bordered
+  tr
+    th From
+    th Message
+    th
+  = form_for @private_message do |f|
+    tr
+      td
+      td
+        = f.number_field :sender_id, value: current_user.id, style: "display:none;"
+        = f.number_field :receiver_id, value: @recipient_id, style: "display:none;"
+        = f.text_area :body, placeholder: "Enter Message", style: "width: 575px; height: 74px;", class: "text optional form-control"
+      td
+        .actions = f.submit 'Send Message', class: "btn btn-success"
+  - @messages.each do |message|
+    tr
+      td
+        - if message.sender.username.eql? current_user.username
+          = "me"
+        - else
+          = link_to "#{message.sender.username}", show_sender_detail_path( user_id: message.sender.id)
+        br/
+        = distance_of_time_in_words(Time.now, message.created_at)
+      td
+        .well
+          = message.body.html_safe
+      td
+        - if message.is_deleted.eql?false
+          = link_to "Move to Trash", trash_private_message_path(id: message.id)
+        - else
+          = link_to "Move to Inbox", untrash_private_message_path(id: message.id)
+        br/

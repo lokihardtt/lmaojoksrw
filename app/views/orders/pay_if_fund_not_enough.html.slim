@@ -1,0 +1,13 @@
+| Bitcoin Address : #{@order.escrow_address}
+br/
+| Total Amount : #{convert_float_to_decimal(@order.total_payment)} BTC
+br/
+table.qrcode
+  - @qr = RQRCode::QRCode.new( "bitcoin:#{ @order.escrow_address.gsub(/\n/, '') }?amount=#{convert_float_to_decimal(@order.total_payment)}&message=test%201", :size => 9, :level => :h )
+  - @qr.modules.each_index do |x|
+    tr
+    - @qr.modules.each_index do |y|
+      - if @qr.dark?(x,y) 
+        td.black
+      - else 
+        td.white

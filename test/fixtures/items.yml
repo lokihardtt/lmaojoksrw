@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  description: MyText
+  price: 1
+  ship_from: MyString
+  is_hidden: false
+  is_up_front_payment: false
+
+two:
+  name: MyString
+  description: MyText
+  price: 1
+  ship_from: MyString
+  is_hidden: false
+  is_up_front_payment: false

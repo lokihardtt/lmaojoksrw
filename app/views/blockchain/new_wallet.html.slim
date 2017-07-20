@@ -1,0 +1,6 @@
+= simple_form_for :create_wallet, url: blockchain_create_new_wallet_path, method: :post  do |f|
+  = text_field_tag "wallet_password", '', type: :password, required: true, class: "form-control", placeholder: "your pin"
+  br/
+  = text_field_tag "wallet_label", '', required: true, class: 'form-control', placeholder: "Label for wallet"
+  br/
+  = f.submit "Create Wallet", class: "btn btn-success"

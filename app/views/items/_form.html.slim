@@ -1,0 +1,107 @@
+div style="margin-top: 14px;"
+  = simple_form_for(@item, :defaults => { :wrapper_html => {:class => 'form-group'}, :input_html => { :class => 'form-control' } }) do |f|
+    - if @item.errors.any?
+      #error_explanation
+        h2 = "#{pluralize(@item.errors.count, "error")} prohibited this item from being saved:"
+        ul
+          - @item.errors.full_messages.each do |message|
+            li = message
+
+    .field
+      .col-sm-2
+        = f.label :name, "#{t('.name')}"
+      .col-sm-10
+        = f.input_field :name, placeholder: "Item name"
+      = f.input :user_id, as: :hidden, input_html: {value: current_user.id}
+    div style="clear: both;"
+    br/
+    .field
+      .col-sm-2
+        = f.label :Group, "#{t('.group')}"
+      .col-sm-10
+        = f.input :category_ids, :as => :grouped_select, :collection => [@my_categories, @all_categories], :group_method => :last, input_html: { multiple: true },  label: false
+    div style="clear: both;"
+    br/
+    .field
+      .col-sm-2
+        = f.label :description, "#{t('.desc')}"
+      .col-sm-10
+        = f.input :description, as: :text, placeholder: "Description", input_html: { style: "height: 150px;" }, label: false
+    div style="clear: both;"
+    br/
+    .field
+      .col-sm-2
+        = f.label :price, "#{t('.price')}"
+      .col-sm-2
+        = f.input :price, input_html: { style: "width: 100%;" }, label: false, min: "0"
+      .col-sm-2
+        = f.input :currency, collection: @currency, include_blank: false, label: false, input_html: { style: "width: 110px;" }
+      .col-sm-5
+    div style="clear: both;"
+    .field
+      .col-sm-2
+        = f.label :quantity, "#{t('.quantity')}"
+      .col-sm-2
+        = f.input :quantity, label: false, input_html: { style: "width: 100%;" }
+      .col-sm-7
+        | #{t('.how')}
+    div style="clear: both;"
+    .field
+      .col-sm-2
+        = f.label :unlimited, "Unlimited"
+      .col-sm-2
+        = f.input :unlimited, label: false
+      .col-sm-7
+        | check it if you want to set unlimited item
+    div style="clear: both;"
+    .field
+      .col-sm-2
+        = f.label :hidden, "#{t('.hidden')}"
+      .col-sm-2
+        = f.input :is_hidden, collection: [["No", 0], ["Yes", 1]], include_blank: false, label: false
+      .col-sm-8
+        | #{t('.if')}
+    div style="clear: both;"
+    .field
+      .col-sm-2
+        b #{t('.image')}
+      .col-sm-7
+        #image
+          = f.simple_fields_for :galleries do |gallery|
+            = render 'gallery_fields', :f => gallery
+      .col-sm-3
+        | #{t('.all')} &nbsp;
+        b #{t('.must')}
+    div style="clear: both;"
+    br/
+    .field
+      .col-sm-2
+        b #{t('.shipping')}
+      .col-sm-4
+        = f.input :shipping_option_ids, as: :check_boxes, collection: @shipping_options, label: false, input_html: { class: "checkbox", style: "margin-left: 0px !important;" }
+    div style="clear: both;"
+    br/
+    .field
+      .col-sm-2
+        b #{t('.from')}
+      .col-md-4.col-sm-10
+        = f.input :ship_from, as: :select, label: false, collection: @countries
+    div style="clear: both;"
+    br/
+    .field
+      .col-sm-2
+        b #{t('.to')}
+      .col-md-4.col-sm-10
+        / - country_group = [@my_countries, @all_country]
+        / = select_tag :country_ids, grouped_options_for_select(country_group), multiple: true, class: "grouped_select optional form-control", style: "height: 300px;"
+        = f.input :country_ids, :as => :grouped_select, :collection => [@my_countries, @all_country], :group_method => :last, input_html: { multiple: true, style: "height: 300px;" },  label: false
+    div style="clear: both;"
+    .actions 
+      .col-sm-2
+      .col-md-4.col-sm-10
+        - if controller_name == "items" && action_name === "new"
+          = f.submit "#{t('.add')}", class: "btn btn-success"
+        - else
+          = f.submit "Update", class: "btn btn-success"
+          | &nbsp; &nbsp;
+          = link_to "Cancel", items_path, class: "btn btn-danger"

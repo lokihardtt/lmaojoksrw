@@ -1,0 +1,66 @@
+- if @blockchain_payment_method.status.eql?true
+  .alert.alert-info role="alert"
+    = "Welcome To #{@market_name.name rescue OpenFreeMarketTest}"
+    br/
+    | To make sure all bitcoin wallet function work. we need you to follow this step to enable api.
+    ul#selector
+      li = "Go to #{link_to "blockchain.info", "https://blockchain.info/wallet", :target => "_blank"}".html_safe
+      li = "Login to your wallet and use #{current_user.identifier} for your indetifier to open your wallet"
+      li = "Choose Account Settings."
+      li = "Under IP Restrictions menu checklist 'Enable Api Access'"
+    | If you still using our old wallet or your identifier still empty you can click create wallet menu
+
+div style="margin-top: 60px;"
+  / table
+  - @items.each do |item|
+    .well
+      - if item.galleries.any?
+        .col-md-3 style="margin-left: -25px;"
+          .thumbnail
+            = image_tag show_image(item.galleries.first.image.thumb.url), class: "lazy"
+      - else
+        .col-md-3 style="margin-left: -25px;"
+          .thumbnail
+            = image_tag image_path('no_image_w_large.gif')
+      .col-md-7
+        - if current_user.role.eql?("Vendor")
+          = link_to "#{item.name}", item
+        - else
+          = link_to "#{item.name}", item_detail_url(item.random_string), :"data-no-turbolink" => "true"
+        br/
+        - if item.unlimited
+          | this item is unlimited
+        - else
+          = "#{item.quantity} available"
+        br/
+        - if (item.currency.eql?"Bitcoin") || (item.currency.eql?"BTC")
+            = item.price_with_precision
+            | &nbsp; BTC
+        - else
+          = item.price_with_precision
+          = " #{item.currency}"
+          br/
+          - if current_user.currency.present?
+            - if (current_user.currency.eql?"Bitcoin") || (current_user.currency.eql?"BTC")
+              - group = @rates.select { |element_hash| element_hash["code"].eql?"#{item.currency}" }
+              - @price = item.price.to_f / group.first['rate'].to_f
+              = convert_float_to_decimal(convert_float_to_decimal(@price).to_f.round(5))
+              | &nbsp; BTC
+            - else
+              - if current_user.currency.eql? "United States Dollar"
+                - current_user.currency = "USD"
+              - elsif current_user.currency.eql? "Indonesian Rupiah"
+                - current_user.currency = "IDR"
+              - group = @rates.select { |element_hash| element_hash["code"].eql?"#{item.currency}" }
+              - group_local = @rates.select { |element_hash| element_hash["code"].eql?"#{current_user.currency}" }
+              - @price = item.price.to_f / group.first['rate'].to_f
+              - @price_local = @price.to_f * group_local.first['rate'].to_f
+              = convert_float_to_decimal(convert_float_to_decimal(@price).to_f.round(5))
+              | &nbsp; BTC
+        br/
+        = "From : #{item.country.name if item.country}"
+        br/
+        | Vendor : #{ link_to(item.user.username, show_sender_detail_path(user_id: item.user.id)) }
+      div style="clear: both;"
+
+= paginate @items

@@ -1,0 +1,43 @@
+= simple_form_for :invite_buyer, url: invites_sent_invitation_path, method: :post do |f|
+  .col-md-3
+    = f.label "Invitation Token"
+  .col-md-9
+    = text_field_tag "invitation_token", SecureRandom.urlsafe_base64(30), readonly: true, style: "width: 100%;"
+    = hidden_field_tag "role", "Buyer"
+    = hidden_field_tag "user_id", current_user.id
+  div style="clear: both;"
+  br/
+  .col-md-3
+  .col-md-9
+    = f.submit "Invite", class: "btn btn-success"
+div style="clear: both;"
+br/
+
+- if @invites.present?
+  table.table-bordered
+    tr
+      th URL
+      th Invitation Accept At
+      th Status
+      th
+    - @invites.each do |invite|
+      - unless invite.status.eql?false
+        tr
+          td
+            - if request.host === "www.openfreemarkettest.com"
+              = "https://#{request.host}/#{invite.invitation_token}/register"
+            - else
+              = "#{request.protocol + request.host}/#{invite.invitation_token}/register"
+          - if invite.invitation_accepted_at.present?
+            td
+              = invite.invitation_accepted_at.strftime("%Y-%m-%d")
+            td
+              = invite.status
+            td
+          - else
+            td
+              = "-"
+            td
+              = invite.status
+            td
+              = link_to "Cancel", invites_cancel_invited_path(id: invite.id), class: "btn btn-danger"

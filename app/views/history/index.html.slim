@@ -1,0 +1,19 @@
+h3 Audit History
+
+table.table.table-bordered
+  tr
+    th Data Occured UTC
+    th Sender
+    th Receiver
+    th Amount BTC change
+    th Status
+    th Info
+  - @histories.each do |history|
+    tr
+      td = history.created_at.strftime("%B %d, %Y")
+      td = history.username
+      td = history.receiver
+      td = "#{history.amount.to_s} BTC"
+      td = history.status
+      td = history.transaction_type
+  = paginate @histories

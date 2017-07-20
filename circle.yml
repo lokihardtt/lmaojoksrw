@@ -1,0 +1,10 @@
+machine:
+  ruby:
+    version:
+      2.1.2
+
+database:
+  override:
+    - cp config/database.yml.ci config/database.yml
+    - bundle exec rake db:create 
+    - bundle exec rake db:migrate

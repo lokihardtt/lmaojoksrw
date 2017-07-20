@@ -1,0 +1,31 @@
+- if params["multi_sig"].present?
+  .panel.panel-info
+    .panel-heading
+      | The Address of multisig
+    .panel-body
+      | Address
+      = text_field_tag "address", "#{params["multi_sig"]['address']}", class: "form-control", readonly: true
+      br/
+      | Redeem Script
+      = text_area_tag "redeem_script", "#{params["multi_sig"]['redeemScript']}", class: "form-control", style: "height: 130px;", readonly: true
+      h5
+        | Note:
+        br/
+        | Please keep the address and redeem script somewhere in your computer.
+  = link_to "Send payment of #{convert_float_to_decimal(calculate_total(@shopping_cart))} BTC", pay_multisig_path(shopping_cart: @shopping_cart.id, multisig_address: params["multi_sig"]['address']), class: "btn btn-success"
+- else
+  h3
+   | New Multisig Address Secure multisig address.
+
+  h5
+    | Just input vendor address and your address we will generate your public key, address for transfer the btc using multisig also the redeem script.
+
+  = simple_form_for :generate_multi_sig, url: shopping_carts_generate_multi_sig_path, method: :post do |f|
+    = text_field_tag "vendor_pub_key", @vendor_address, class: "form-control", placeholder: "Vendor Address", readonly: true
+    br/
+    = text_field_tag "buyer_pub_key", @buyer_address, class: "form-control", placeholder: "Buyer Address", readonly: true
+    br/
+    = text_field_tag "escrow_pub_key", @escrow_address, class: "form-control", placeholder: "Escrow Address", readonly: true, style: "display: none;"
+    = text_field_tag "shopping_cart", params[:shopping_cart], style: "display: none;"
+    br/
+    = f.submit "Submit", class: "btn btn-primary"

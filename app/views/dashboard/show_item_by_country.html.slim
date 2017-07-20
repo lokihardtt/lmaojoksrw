@@ -1,0 +1,108 @@
+h5
+ = @country.name
+
+h5 Ship To
+div style="margin-top: 10px;"
+  table
+    - @ship_tos.each do |item|
+      tr
+        td
+          - if item.galleries.any?
+            .thumbnail
+              - item_image_url = item.galleries.first.image.thumb.url
+              / - if item_image_url.include? "https"
+              / - else
+              /   - item_image_url["http"] = "https"
+              = image_tag item_image_url, class: "lazy"
+          - else
+            .thumbnail style="height: 149px; width: 238px;"
+              = image_tag image_path('no_image_w_large.gif')
+        td style="vertical-align: top; width: 250px;"
+          p style="padding: 0 15px;"
+            = link_to "#{item.name}", item_detail_url(item.random_string), :"data-no-turbolink" => "true"
+        td style="vertical-align: top;"
+          - if (item.currency.eql?"Bitcoin") || (item.currency.eql?"BTC")
+            | &nbsp; &nbsp; &nbsp;
+            = item.price_with_precision
+            | &nbsp; BTC
+          - else
+            | &nbsp; &nbsp; &nbsp;
+            = item.price_with_precision
+            | &nbsp;
+            = item.currency
+            br/
+            - if current_user.currency.present?
+              - if (current_user.currency.eql?"Bitcoin") || (current_user.currency.eql?"BTC")
+                - group = @rates.select { |element_hash| element_hash["code"].eql?"#{item.currency}" }
+                - @price = item.price.to_f / group.first['rate'].to_f
+                | &nbsp; &nbsp; &nbsp;
+                = convert_float_to_decimal(convert_float_to_decimal(@price).to_f.round(13))
+                | &nbsp; BTC
+              - else
+                - if current_user.currency.eql?"United States Dollar"
+                  - current_user.currency = "USD"
+                - elsif current_user.currency.eql?"Indonesian Rupiah"
+                  - current_user.currency = "IDR"
+                - group = @rates.select { |element_hash| element_hash["code"].eql?"#{item.currency}" }
+                - group_local = @rates.select { |element_hash| element_hash["code"].eql?"#{current_user.currency}" }
+                - @price = item.price.to_f / group.first['rate'].to_f
+                - @price_local = @price.to_f * group_local.first['rate'].to_f
+                | &nbsp; &nbsp; &nbsp;
+                = convert_float_to_decimal(convert_float_to_decimal(@price).to_f.round(13))
+                | &nbsp; BTC  
+        td style="vertical-align: top;"
+          | &nbsp; &nbsp; &nbsp; 
+          = "#{item.user.username} #{rating(item.user.id)}"
+
+h5 Ship From
+div style="margin-top: 10px;"
+  table
+    - @ship_froms.each do |item|
+      tr
+        td
+          - if item.galleries.any?
+            .thumbnail
+              - item_image_url = item.galleries.first.image.thumb.url
+              - if item_image_url.include? "https"
+              - else
+                - item_image_url["http"] = "https"
+              = image_tag item_image_url, class: "lazy"
+          - else
+            .thumbnail style="height: 149px; width: 238px;"
+              = image_tag image_path('no_image_w_large.gif')
+        td style="vertical-align: top; width: 250px;"
+          p style="padding: 0 15px;"
+            = link_to "#{item.name}", item_detail_url(item.random_string), :"data-no-turbolink" => "true"
+        td style="vertical-align: top;"
+          - if (item.currency.eql?"Bitcoin") || (item.currency.eql?"BTC")
+            | &nbsp; &nbsp; &nbsp;
+            = item.price_with_precision
+            | &nbsp; BTC
+          - else
+            | &nbsp; &nbsp; &nbsp;
+            = item.price_with_precision
+            | &nbsp;
+            = item.currency
+            br/
+            - if current_user.currency.present?
+              - if (current_user.currency.eql?"Bitcoin") || (current_user.currency.eql?"BTC")
+                - group = @rates.select { |element_hash| element_hash["code"].eql?"#{item.currency}" }
+                - @price = item.price.to_f / group.first['rate'].to_f
+                | &nbsp; &nbsp; &nbsp;
+                = convert_float_to_decimal(convert_float_to_decimal(@price).to_f.round(13))
+                | &nbsp; BTC
+              - else
+                - if current_user.currency.eql?"United States Dollar"
+                  - current_user.currency = "USD"
+                - elsif current_user.currency.eql?"Indonesian Rupiah"
+                  - current_user.currency = "IDR"
+                - group = @rates.select { |element_hash| element_hash["code"].eql?"#{item.currency}" }
+                - group_local = @rates.select { |element_hash| element_hash["code"].eql?"#{current_user.currency}" }
+                - @price = item.price.to_f / group.first['rate'].to_f
+                - @price_local = @price.to_f * group_local.first['rate'].to_f
+                | &nbsp; &nbsp; &nbsp;
+                = convert_float_to_decimal(convert_float_to_decimal(@price).to_f.round(13))
+                | &nbsp; BTC  
+        td style="vertical-align: top;"
+          | &nbsp; &nbsp; &nbsp; 
+          = "#{item.user.username} #{rating(item.user.id)}"

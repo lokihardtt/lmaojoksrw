@@ -1,0 +1,11 @@
+= simple_form_for :refund_order, url: refund_order_path, method: :post, :input_html => { :class => 'form-control' } do |f| 
+  .field
+    = f.label :amount, "Amount"
+    = text_field_tag "shopping_cart_id", @shopping_cart.id, style: "display: none;"
+    = text_field_tag "amount", @total_payment, type: :number, required: true, class: "form-control"
+  .field
+    = f.label :buyer_address, "Buyer Address"
+    = text_field_tag "buyer_address", @buyer_address, class: "form-control", readonly: true
+  .actions
+    br/
+    = f.submit "Refund", class: "btn btn-primary"

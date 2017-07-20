@@ -1,0 +1,27 @@
+h1 Uncategory
+
+- @uncategories_items.each do |item|
+  .well
+    - if item.galleries.any?
+      .col-md-3 style="margin-left: -25px;"
+        .thumbnail
+          - item_image_url = item.galleries.first.image.thumb.url
+          / - if item_image_url.include? "https"
+          / - else
+          /   - item_image_url["http"] = "https"
+          = image_tag item_image_url, class: "lazy"
+    - else
+      .col-md-3 style="margin-left: -25px;"
+        .thumbnail
+          = image_tag image_path('no_image_w_large.gif')
+    .col-md-7
+      - if current_user.role.eql?("Vendor")
+        = link_to "#{item.name}", item
+      - else
+        = link_to "#{item.name}", item_detail_url(item.random_string), :"data-no-turbolink" => "true"
+      br/
+      = "#{item.quantity} available"
+      br/
+      | BTC &nbsp;
+      = item.price_with_precision
+    div style="clear: both;"

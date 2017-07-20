@@ -1,0 +1,17 @@
+h4 Message to Support Team
+
+= simple_form_for :message_support_contact, url: message_support_contact_path, :html => { :style => 'text-align: center;'} do |f|
+
+  div style="font-size: 12px;"
+    .col-md-3
+      .field
+        = f.number_field :sender_id, value: current_user.id, style: "display:none;"
+      .field
+        = text_field_tag :receiver_name, @support.username, readonly: true, class: "string optional form-control"
+        = f.number_field :receiver_id, value: @support.id, style: "display:none;"
+    .col-md-6
+      .field
+        = f.text_area :body, placeholder: "Enter Message", style: "width: 367px; height: 74px;", class: "text optional form-control"
+      div id="show-pgp"
+    .col-md-3
+      .actions = f.submit 'Sent Message', class: "btn btn-success"

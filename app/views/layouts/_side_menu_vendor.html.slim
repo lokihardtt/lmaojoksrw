@@ -1,0 +1,52 @@
+- if controller_name == "items" && current_user.role == "Vendor"
+  .nav.nav-pills.nav-stacked
+    li class=" #{'active' if action_name.eql?('index') }"
+      = link_to items_url, :"data-no-turbolink" => "true" do 
+        span.badge.pull-right
+        | My Items
+    li class=" #{'active' if action_name.eql?('new') }"
+      = link_to new_item_path, :"data-no-turbolink" => "true" do 
+        span.badge.pull-right
+        | Add Item
+    li class=" #{'active' if action_name.eql?('shipping_option_list') || action_name.eql?('shipping_option_edit') }"
+      = link_to shipping_option_list_path do
+        span.badge.pull-right
+        | #{t('.shipping')}
+    li class=" #{'active' if action_name.eql?('shipping_option_new') }"
+      = link_to shipping_option_new_path do
+        span.badge.pull-right
+        | #{t('.add')}
+- elsif (controller_name == "orders" && action_name == "account") || controller_name == "history"
+  .nav.nav-pills.nav-stacked
+    li class=" #{'active' if action_name.eql?('account') }"
+      = link_to bitcoin_account_url, :"data-no-turbolink" => "true" do 
+        span.badge.pull-right
+        | Bitcoin Account
+    - if @multisig.present?
+      - if @multisig.status.eql?true
+        li class=" #{'active' if action_name.eql?('new') }"
+          = link_to "javascript:void(0);", :"data-no-turbolink" => "true" do 
+            span.badge.pull-right
+            | Multi-sig Configuration
+    li class=" #{'active' if action_name.eql?('index') && controller_name.eql?('history') }"
+      = link_to history_url, :"data-no-turbolink" => "true" do 
+        span.badge.pull-right
+        | History
+- elsif controller_name == "home"
+
+- else
+  - if current_user.role.eql?"Vendor"
+    = simple_form_for :search, url: dashboard_vendor_post_path, method: :post do |f|
+      = text_field_tag "name", '', class: "form-control", placeholder: "search"
+      = f.submit "search", class: "btn btn-success"
+  - else
+    = simple_form_for :search, url: dashboard_post_path, method: :post do |f|
+      = text_field_tag "name", '', class: "form-control", placeholder: "search"
+      = f.submit "search", class: "btn btn-success"
+  h3 #{t('.category')}
+  .list-group
+    - @categories.each do |category|
+      - if count_items_by_category(category.id, params[:hours]) > 0
+        = link_to "#{category.name} (#{ count_items_by_category(category.id, params[:hours]) })", item_by_category_path(id: category.id, hours: params[:hours]), class: "list-group-item", style: "background: none; border: none;"
+    - if count_item_in_uncategories(params[:hours]) > 0
+      = link_to "Uncategory (#{ count_item_in_uncategories(params[:hours]) })", uncategories_items_path(hours: params[:hours]), class: "list-group-item", style: "background: none; border: none;"

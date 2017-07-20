@@ -1,0 +1,18 @@
+= form_for @address do |f|
+  - if @address.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@address.errors.count, "error")} prohibited this address from being saved:"
+      ul
+        - @address.errors.full_messages.each do |message|
+          li = message
+
+  .field
+    = f.label :address
+    = f.text_field :address
+  .field
+    = f.label :user_id
+    = f.number_field :user_id
+  .field
+    = f.label :is_active
+    = f.check_box :is_active
+  .actions = f.submit 'Save'

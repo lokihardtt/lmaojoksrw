@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  address: MyText
+  redeem_script: MyText
+  vendor_address: MyText
+  buyer_address: MyText
+  escrow_address: MyText
+
+two:
+  address: MyText
+  redeem_script: MyText
+  vendor_address: MyText
+  buyer_address: MyText
+  escrow_address: MyText

@@ -1,0 +1,30 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Login</h3>
+  </div>
+  <div class="panel-body">
+    <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name), :defaults => { :wrapper_html => {:class => 'form-group'}, :input_html => { :class => 'form-control' } }, html: { autocomplete: "off" } ) do |f| %>
+      <div class="form-inputs">
+        <%= f.input :username, required: false, autofocus: true, input_html: { autocorrect:"none",  autocapitalize:"none", value: "", autocomplete: "off" } %>
+        <%= f.input :password, required: false, input_html: { autocorrect:"none",  autocapitalize:"none" } %>
+      </div>
+
+      <div class="form-inputs">
+        <%= show_simple_captcha %>
+      </div>
+
+      <div class="checkbox" style="padding-left: 20px">
+        <%#= f.input_field :remember_me, as: :boolean, class: 'boolean optional' %>
+        <!-- <label style='padding-left: 0px;'><b>remember me</b></label> -->
+      </div>
+
+      <div class="form-actions">
+        <%= f.button :submit, "Sign in", class: 'btn btn-primary btn-lg' %>
+      </div>
+    <% end %>
+
+    <!-- <hr> -->
+
+    <%#= render "devise/shared/links" %>
+  </div>
+</div>

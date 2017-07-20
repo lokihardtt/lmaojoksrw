@@ -1,0 +1,18 @@
+p#notice = notice
+
+p
+  strong Sender:
+  = @message.sender_id
+p
+  strong Receiver:
+  = @message.receiver_id
+p
+  strong Body:
+  = @message.body
+p
+  strong Status:
+  = @message.status
+
+= link_to 'Edit', edit_message_path(@message)
+'|
+= link_to 'Back', messages_path

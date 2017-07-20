@@ -1,0 +1,119 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title"><%="#{t('.edit')}"%> <%= link_to "view profile", show_sender_detail_path(user_id: resource.id), class: "profile_link" %><%#= resource_name.to_s.humanize %></h3>
+  </div>
+  <div class="panel-body">
+    <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }, :defaults => { :wrapper_html => {:class => 'form-group'}, :input_html => { :class => 'form-control' } }) do |f| %>
+      <%= f.error_notification %>
+      <div class="form-inputs">
+        <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+          <p>Currently waiting confirmation for: <%= resource.unconfirmed_email %></p>
+        <% end %>
+        <% if resource.role.eql?"Vendor" %>
+          <div class="col-sm-3">
+            <%= f.label :name, "Vendor Description" %>
+          </div>
+          <div class="col-sm-9">
+            <%= f.input :description, as: :text, input_html: { style: "height: 150px;" }, label: false %>
+          </div>
+          <div class="col-sm-3">
+            <%= f.label :name, "Public PGP Key" %>
+          </div>
+          <div class="col-sm-9">
+            <% if @publickey.present? %>
+              <%= text_area_tag :pgp_key, @publickey.gsub("<br/>","\n"), style: "height: 625px; width: 106%;", class: "text optional form-control" %>
+            <% else %>
+              <%= text_area_tag :pgp_key, '', style: "height: 150px; width: 100%;", class: "text optional form-control" %>
+            <% end %>
+          </div>
+          <div class="col-sm-3">
+            <%= f.label :name, "Phrase" %>
+          </div>
+          <div class="col-sm-9">
+            <%= f.input :phrase, label: false %>
+          </div>
+          <div class="col-sm-3">
+            <%= f.label :name, "Vacation Mode" %>
+          </div>
+          <div class="col-sm-9">
+            <%= f.input :vacation_mode, label: false %>
+          </div>
+          
+        <% else %>
+          <div class="col-sm-3">
+            <%= f.label :name, "Public PGP Key" %>
+          </div>
+          <div class="col-sm-9">
+            <% if @publickey.present? %>
+              <%= text_area_tag :pgp_key, @publickey.gsub("<br/>","\n"), style: "height: 625px; width: 106%;", class: "text optional form-control" %>
+            <% else %>
+              <%= text_area_tag :pgp_key, '', style: "height: 150px; width: 100%;", class: "text optional form-control" %>
+            <% end %>
+          </div>
+        <% end %>
+        <% if current_user.fa_pgp %>
+          <div class="col-sm-3">
+            <br/>
+            <%= f.label :name, "2-Factor Authorization" %>
+          </div>
+          <div class="col-sm-9">
+            <br/>
+            <%= f.input :fa_pgp, as: :select, label: false, input_html: { style: "width: 80px;" } %>
+          </div>
+        <% else %>
+          <div class="col-sm-12">
+            <br/>
+            <%= link_to "Enable 2-Factor Authorization", input_string_from_profile_path %>
+            <br/>
+            <br/>
+          </div>
+        <% end %>
+        <div class="col-sm-3">
+          <%= f.label :name, "Ship to Country (not public)" %>
+        </div>
+        <div class="col-sm-9">
+          <%= f.input :location, as: :select, collection: @countries, label: false %>
+        </div>
+        <div class="col-sm-3">
+          <%= f.label :name, "Default Currency" %>
+        </div>
+        <div class="col-sm-9">
+          <%= f.input :currency, collection: @currency_true, include_blank: false, label: false, input_html: {style: "width: 230px;"} %>
+        </div>
+        <div class="col-sm-3" style="margin-top: 14px;">
+          <%= f.label :name, "Language" %>
+        </div>
+        <div class="col-sm-9" style="margin-top: 10px;">
+          <%= f.input :locale, collection: @languange, include_blank: false, label: false, input_html: {style: "width: 230px;"} %>
+        </div>
+        <div class="col-sm-3">
+          <%= f.label :name, "New Password" %>
+        </div>
+        <div class="col-sm-9">
+          <%= f.input :password, placeholder: "Optionally, enter a new password", autocomplete: "off", required: false, label: false %>          
+        </div>
+        <div class="col-sm-3">
+          <%= f.label :name, "New Password Confirmation" %>
+        </div>
+        <div class="col-sm-9">
+          <%= f.input :password_confirmation, placeholder: "Re-type your new password", required: false, label: false %>
+        </div>
+        <div style="clear: both;"></div>
+        <hr/>
+        <div class="col-sm-3">
+          <%= f.label :name, "Current Password" %>
+        </div>
+        <div class="col-sm-9">
+          <%= f.input :current_password, as: :password, placeholder: "Enter your existing password to update details", autocomplete: "off", required: false, label: false %>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <%= f.button :submit, "#{t('.update')}", class: "btn btn-default" %>
+        <% if @publickey.present? %>
+          <%= link_to "Change Password with PGP challenge", confirmation_change_password_path, class: "link-right" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

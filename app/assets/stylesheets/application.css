@@ -1,0 +1,97 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any styles
+ * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
+ * file per style scope.
+ *
+ *= require bootstrap
+ *= require categories
+ *= require conversations
+ *= require dashboard
+ *= require home
+ *= require items
+ *= require pgp
+ *= require purchases
+ *= require chosen
+ *= require_self
+ */
+
+.sort-link {
+  text-decoration: underline;
+  font-weight: bold;
+  color: black;
+}
+
+.label-order {
+  color: #A2A4A4;
+  margin-left: 146px;
+  margin-top: -30px;
+}
+
+.new-label-order {
+  color: #A2A4A4;
+}
+
+.profile_link {
+  color: #428bca !important;
+  font-size: 12px;
+}
+
+.borderless {
+  border-top: none !important;
+}
+
+.clear-both {
+  clear: both;
+}
+
+.new-box {
+  font-size: 9px;
+  float: left;
+  padding-right: 4px;
+  color: red;
+}
+
+.phrase {
+  color: #777;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.qrcode {
+  border-width: 0;
+  border-style: none;
+  border-color: #0000ff;
+  border-collapse: collapse;
+}
+.qrcode td {
+  border-width: 0; 
+  border-style: none;
+  border-color: #0000ff; 
+  border-collapse: collapse; 
+  padding: 0; 
+  margin: 0; 
+  width: 10px; 
+  height: 10px; 
+}
+.qrcode td.black { background-color: #000; }
+.qrcode td.white { background-color: #fff; }
+
+@media (min-width: 768px) and ( max-width: 991px) {
+  .nav > li > a {
+    position: relative;
+    display: block;
+    padding: 15px 7px;
+    font-size: 12px;
+  }
+}
+.link-right{
+  float: right;
+  margin-top: 5px;
+}

@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  invitation_token: MyText
+  invitation_accepted_at: 2015-05-21
+
+two:
+  invitation_token: MyText
+  invitation_accepted_at: 2015-05-21

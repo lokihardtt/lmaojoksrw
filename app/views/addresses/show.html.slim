@@ -1,0 +1,15 @@
+p#notice = notice
+
+p
+  strong Address:
+  = @address.address
+p
+  strong User:
+  = @address.user_id
+p
+  strong Is active:
+  = @address.is_active
+
+= link_to 'Edit', edit_address_path(@address)
+'|
+= link_to 'Back', addresses_path

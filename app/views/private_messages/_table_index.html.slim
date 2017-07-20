@@ -1,0 +1,43 @@
+table.table.table-bordered
+  tr
+    th From
+    th
+    th 
+  - if @conversations.present?
+    - @conversations.each do |conversation|
+      - if is_conversation_not_deleted?(conversation) && conversation.private_messages.last.sender.present?
+        tr
+          td
+            - if conversation.private_messages.last.receiver.username.eql? ( current_user.username )
+              = link_to "#{ conversation.private_messages.last.sender.username }", show_sender_detail_path( user_id: conversation.private_messages.last.sender.id ), :"data-no-turbolink" => "true"
+            - else
+              = link_to "#{ conversation.private_messages.last.receiver.username }", show_sender_detail_path( user_id: conversation.private_messages.last.receiver.id ), :"data-no-turbolink" => "true"
+          td
+            - check_read = conversation.private_messages.last.conversation.conversations_users.where(conversation_id: conversation.id, receiver_id: current_user.id).first
+            - if check_read.present?
+              - if check_read.is_read.eql?false
+                .new-box
+                  = "new"
+                - if conversation.private_messages.last.receiver.username.eql? ( current_user.username )
+                  = link_to "#{ conversation.private_messages.last.body.gsub('<br/>', ' ') }", reply_path( user: conversation.private_messages.last.sender.username ), :"data-no-turbolink" => "true"
+                - else
+                  = link_to "#{ conversation.private_messages.last.body.gsub('<br/>', ' ') }", reply_path(user: conversation.private_messages.last.receiver.username), :"data-no-turbolink" => "true"
+              - else
+                - if conversation.private_messages.last.receiver.username.eql? ( current_user.username )
+                  = link_to "#{ conversation.private_messages.last.body.gsub('<br/>', ' ') }", reply_path( user: conversation.private_messages.last.sender.username ), :"data-no-turbolink" => "true"
+                - else
+                  = link_to "#{ conversation.private_messages.last.body.gsub('<br/>', ' ') }", reply_path(user: conversation.private_messages.last.receiver.username), :"data-no-turbolink" => "true"
+            - else
+              = link_to "#{ conversation.private_messages.last.body.gsub('<br/>', ' ') }", reply_path(user: conversation.private_messages.last.receiver.username), :"data-no-turbolink" => "true"
+          td
+            - unless check_read.is_deleted
+              = link_to "Delete entire thread", trash_path(conversations_user_id: check_read.id)
+            | , &nbsp;
+            - if check_read.is_read
+              = link_to "Mark as Unread", unread_conversation_path(conversations_user_id: check_read.id)
+            - else
+              = link_to "Mark as read", read_conversation_path(conversations_user_id: check_read.id)
+  - else
+    tr 
+      td colspan="4"
+        | Your inbox is empty

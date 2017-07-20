@@ -1,0 +1,27 @@
+h1 Listing messages
+
+table
+  thead
+    tr
+      th Sender
+      th Receiver
+      th Body
+      th Status
+      th
+      th
+      th
+
+  tbody
+    - @messages.each do |message|
+      tr
+        td = message.sender_id
+        td = message.receiver_id
+        td = message.body
+        td = message.status
+        td = link_to 'Show', message
+        td = link_to 'Edit', edit_message_path(message)
+        td = link_to 'Destroy', message, data: {:confirm => 'Are you sure?'}, :method => :delete
+
+br
+
+= link_to 'New Message', new_message_path

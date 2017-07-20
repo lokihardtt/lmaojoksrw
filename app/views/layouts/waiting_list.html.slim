@@ -1,0 +1,13 @@
+DOCTYPE html
+html
+  head
+    title = @market_name.name rescue Openfreemarkettest
+    = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true
+    script src="//gitcdn.org/libs/bitcoinate/0.2.1/index.min.js" 
+    = csrf_meta_tags
+  BODY
+    .container
+      .row
+        .startert-template
+          div style="margin-top: 30px;"
+            = yield

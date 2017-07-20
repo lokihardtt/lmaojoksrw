@@ -1,0 +1,24 @@
+tr.order-list style="background: #D2E0ED;"
+  td
+    - index = shopping_cart_item_counter + 1
+    = link_to "#{shopping_cart_item.item.name rescue nil}", item_detail_url(shopping_cart_item.item.random_string), :"data-no-turbolink" => "true"
+    = hidden_field_tag "shopping_cart_item_id[#{index}]", shopping_cart_item.id rescue nil
+    = text_field_tag "price[#{index}]", shopping_cart_item.item.price, class: "price", style: "display: none;"
+  td
+    = link_to "#{shopping_cart_item.item.user.username rescue nil}", show_sender_detail_path(user_id: shopping_cart_item.item.user.id) 
+  td
+    - shippings = shopping_cart_item.item.user.shipping_options.collect{ |shipping_option| ["#{shipping_option.name} (#{convert_to_btc(shipping_option.currency, shipping_option.price)} BTC)", shipping_option.id]}
+    - shippings_price = shopping_cart_item.item.user.shipping_options.collect{ |shipping_option| [shipping_option.name, shipping_option.price]}
+    
+    - if shopping_cart_item.shipping_id.present?
+      = select_tag "shipping[#{index}]", options_for_select(shippings, shopping_cart_item.shipping_id), class: "shipping"
+    - else
+      = select_tag "shipping[#{index}]", options_for_select(shippings), class: "shipping"
+  td
+    = text_field_tag "quantity[#{index}]", shopping_cart_item.quantity, type: :number, required: true, class: "quantity"
+    - if params[:message].present?
+      = "#{shopping_cart_item.quantity} #{shopping_cart_item.item.name rescue nil}, only #{get_item(shopping_cart_item.item_id)} available"
+  td
+    = "#{convert_float_to_decimal(shopping_cart_item.price.to_f.round(5))} BTC"
+  td
+    = link_to "#{t('.delete')}", delete_cart_url(id: shopping_cart_item.id ), data: {:confirm => 'Are you sure?'}, :method => :get, class: "btn btn-danger"

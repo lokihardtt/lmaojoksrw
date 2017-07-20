@@ -1,0 +1,238 @@
+ol.breadcrumb
+  li 
+    = link_to "A", "#a"
+  li
+    = link_to "B", "#b"
+  li
+    = link_to "C", "#c"
+  li
+    = link_to "D", "#d"
+  li
+    = link_to "E", "#e"
+  li
+    = link_to "F", "#f"
+  li
+    = link_to "G", "#g"
+  li
+    = link_to "H", "#h"
+  li
+    = link_to "I", "#i"
+  li
+    = link_to "J", "#j"
+  li
+    = link_to "K", "#k"
+  li
+    = link_to "L", "#l"
+  li
+    = link_to "M", "#m"
+  li
+    = link_to "N", "#n"
+  li
+    = link_to "O", "#o"
+  li
+    = link_to "P", "#p"
+  li
+    = link_to "Q", "#q"
+  li
+    = link_to "R", "#r"
+  li
+    = link_to "S", "#s"
+  li
+    = link_to "T", "#t"
+  li
+    = link_to "U", "#u"
+  li
+    = link_to "V", "#v"
+  li
+    = link_to "W", "#w"
+  li
+    = link_to "X", "#x"
+  li
+    = link_to "Y", "#y"
+  li
+    = link_to "Z", "#z"
+  
+
+.jumbotron
+  #a
+    | A
+    - @countries.where("name ILIKE 'A%'").each_slice(6).each do |countries|
+      .col-md-12
+        - countries.each do |country|
+          .col-md-4
+            = link_to country.name, show_item_by_country_path(country_id: country.id)
+  #b
+    | B
+    - @countries.where("name ILIKE 'B%'").each_slice(6).each do |countries|
+      .col-md-12
+        - countries.each do |country|
+          .col-md-4
+            = link_to country.name, show_item_by_country_path(country_id: country.id)
+  #c
+    | C
+    - @countries.where("name ILIKE 'C%'").each_slice(6).each do |countries|
+      .col-md-12
+        - countries.each do |country|
+          .col-md-4
+            = link_to country.name, show_item_by_country_path(country_id: country.id)
+  #d
+    | D
+    - @countries.where("name ILIKE 'D%'").each_slice(6).each do |countries|
+      .col-md-12
+        - countries.each do |country|
+          .col-md-4
+            = link_to country.name, show_item_by_country_path(country_id: country.id)
+  #e
+    | E
+    - @countries.where("name ILIKE 'E%'").each_slice(6).each do |countries|
+      .col-md-12
+        - countries.each do |country|
+          .col-md-4
+            = link_to country.name, show_item_by_country_path(country_id: country.id)
+  #f
+    | F
+    - @countries.where("name ILIKE 'F%'").each_slice(6).each do |countries|
+      .col-md-12
+        - countries.each do |country|
+          .col-md-4
+            = link_to country.name, show_item_by_country_path(country_id: country.id)
+  #g
+    | G
+    - @countries.where("name ILIKE 'G%'").each_slice(6).each do |countries|
+      .col-md-12
+        - countries.each do |country|
+          .col-md-4
+            = link_to country.name, show_item_by_country_path(country_id: country.id)
+  #h
+    | H
+    - @countries.where("name ILIKE 'H%'").each_slice(6).each do |countries|
+      .col-md-12
+        - countries.each do |country|
+          .col-md-4
+            = link_to country.name, show_item_by_country_path(country_id: country.id)
+  #i
+    | I
+    - @countries.where("name ILIKE 'I%'").each_slice(6).each do |countries|
+      .col-md-12
+        - countries.each do |country|
+          .col-md-4
+            = link_to country.name, show_item_by_country_path(country_id: country.id)
+  #j
+    | J
+    - @countries.where("name ILIKE 'J%'").each_slice(6).each do |countries|
+      .col-md-12
+        - countries.each do |country|
+          .col-md-4
+            = link_to country.name, show_item_by_country_path(country_id: country.id)
+  #k
+    | K
+    - @countries.where("name ILIKE 'K%'").each_slice(6).each do |countries|
+      .col-md-12
+        - countries.each do |country|
+          .col-md-4
+            = link_to country.name, show_item_by_country_path(country_id: country.id)
+  #l
+    | L
+    - @countries.where("name ILIKE 'L%'").each_slice(6).each do |countries|
+      .col-md-12
+        - countries.each do |country|
+          .col-md-4
+            = link_to country.name, show_item_by_country_path(country_id: country.id)
+  #m
+    | M
+    - @countries.where("name ILIKE 'M%'").each_slice(6).each do |countries|
+      .col-md-12
+        - countries.each do |country|
+          .col-md-4
+            = link_to country.name, show_item_by_country_path(country_id: country.id)
+  #n
+    | N
+    - @countries.where("name ILIKE 'N%'").each_slice(6).each do |countries|
+      .col-md-12
+        - countries.each do |country|
+          .col-md-4
+            = link_to country.name, show_item_by_country_path(country_id: country.id)
+  #o
+    | O
+    - @countries.where("name ILIKE 'O%'").each_slice(6).each do |countries|
+      .col-md-12
+        - countries.each do |country|
+          .col-md-4
+            = link_to country.name, show_item_by_country_path(country_id: country.id)
+  #p
+    | P
+    - @countries.where("name ILIKE 'P%'").each_slice(6).each do |countries|
+      .col-md-12
+        - countries.each do |country|
+          .col-md-4
+            = link_to country.name, show_item_by_country_path(country_id: country.id)
+  #q
+    | Q
+    - @countries.where("name ILIKE 'Q%'").each_slice(6).each do |countries|
+      .col-md-12
+        - countries.each do |country|
+          .col-md-4
+            = link_to country.name, show_item_by_country_path(country_id: country.id)
+  #r
+    | R
+    - @countries.where("name ILIKE 'R%'").each_slice(6).each do |countries|
+      .col-md-12
+        - countries.each do |country|
+          .col-md-4
+            = link_to country.name, show_item_by_country_path(country_id: country.id)
+  #s
+    | S
+    - @countries.where("name ILIKE 'S%'").each_slice(6).each do |countries|
+      .col-md-12
+        - countries.each do |country|
+          .col-md-4
+            = link_to country.name, show_item_by_country_path(country_id: country.id)
+  #t
+    | T
+    - @countries.where("name ILIKE 'T%'").each_slice(6).each do |countries|
+      .col-md-12
+        - countries.each do |country|
+          .col-md-4
+            = link_to country.name, show_item_by_country_path(country_id: country.id)
+  #u
+    | U
+    - @countries.where("name ILIKE 'U%'").each_slice(6).each do |countries|
+      .col-md-12
+        - countries.each do |country|
+          .col-md-4
+            = link_to country.name, show_item_by_country_path(country_id: country.id)
+  #v
+    | V
+    - @countries.where("name ILIKE 'V%'").each_slice(6).each do |countries|
+      .col-md-12
+        - countries.each do |country|
+          .col-md-4
+            = link_to country.name, show_item_by_country_path(country_id: country.id)
+  #w
+    | W
+    - @countries.where("name ILIKE 'W%'").each_slice(6).each do |countries|
+      .col-md-12
+        - countries.each do |country|
+          .col-md-4
+            = link_to country.name, show_item_by_country_path(country_id: country.id)
+  #x
+    | X
+    - @countries.where("name ILIKE 'X%'").each_slice(6).each do |countries|
+      .col-md-12
+        - countries.each do |country|
+          .col-md-4
+            = link_to country.name, show_item_by_country_path(country_id: country.id)
+  #y
+    | Y
+    - @countries.where("name ILIKE 'Y%'").each_slice(6).each do |countries|
+      .col-md-12
+        - countries.each do |country|
+          .col-md-4
+            = link_to country.name, show_item_by_country_path(country_id: country.id)
+  #z
+    | Z
+    - @countries.where("name ILIKE 'Z%'").each_slice(6).each do |countries|
+      .col-md-12
+        - countries.each do |country|
+          .col-md-4
+            = link_to country.name, show_item_by_country_path(country_id: country.id)

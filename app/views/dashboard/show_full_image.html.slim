@@ -1,0 +1,8 @@
+- if @item.galleries.any?
+  - item_image_url = @item.galleries.first.image.url
+  / - if item_image_url.include? "https"
+  / - else
+  /   - item_image_url["http"] = "https"
+  = image_tag item_image_url, class: "lazy"
+- else
+  = image_tag image_path('no_image_w_large.gif')

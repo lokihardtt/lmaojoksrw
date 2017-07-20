@@ -1,0 +1,13 @@
+H1 #{t('.sentbox')}
+ul
+- if @sentbox.present?
+  - @sentbox.each do |sentbox|
+    li
+      = link_to sentbox.subject, conversation_path(sentbox)
+      | &nbsp;
+      - if sentbox.is_completely_trashed?(current_user)
+        = link_to "#{t('.untrash')}", untrash_conversation_path(sentbox), method: :post
+      - else
+        = link_to "#{t('.trash')}", trash_conversation_path(sentbox), method: :post
+- else
+  = "#{t('.empty')}"

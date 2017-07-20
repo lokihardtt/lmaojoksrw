@@ -1,0 +1,77 @@
+- if params[:back].present?
+  .alert.alert-danger role="alert" id="alert-box"
+    | Please upload a pgp key to encrypt this message because vendor for now not upload pgp key
+- elsif params[:success].present?
+  .alert.alert-warning role="alert" id="alert-box"
+    | Your cart already updated
+h5
+  = "You have #{convert_float_to_decimal(@bitcoin_balance.to_f.round(6))} BTC available (#{@local_currency.to_f.round(6)} #{current_user.currency})"
+
+h4 
+  | Cart
+
+= form_tag("/shopping_carts/encrypt_shipping_information", method: "post" ) do
+  table.table.table-bordered
+    tr
+      td #{t('.product')}
+      td #{t('.vendor')}
+      td #{t('.shipping')}
+      td #{t('.quantity')}
+      td 
+        | #{t('.sub')} 
+        br/ 
+        | #{t('.inc')}
+      td
+
+    = render :partial => 'shopping_cart_item', :collection => @shopping_cart.shopping_cart_items
+    tr
+      td colspan="3"
+      td Total Amount
+      td = "#{convert_float_to_decimal(calculate_total(@shopping_cart).to_f.round(6))} BTC"
+    tr
+      td colspan="3"
+      td Total BTC
+      td
+        = "#{convert_float_to_decimal(calculate_total(@shopping_cart).to_f.round(6))} BTC"
+      td
+    tr
+      td colspan="3"
+      td Total #{current_user.currency}
+      td
+        - group = @rates.select { |element_hash| element_hash["code"].eql?"#{current_user.currency}" }
+        - @price = calculate_total(@shopping_cart).to_f * group.first['rate'].to_f
+        | &nbsp; &nbsp; &nbsp; #{current_user.currency}
+        | &nbsp;
+        = convert_float_to_decimal(convert_float_to_decimal(@price).to_f.round(6))
+    = hidden_field_tag "item_id", @shopping_cart.shopping_cart_items.first.item_id rescue nil
+  div style="text-align: right;"
+    = submit_tag "#{t('.update')}", class: "btn btn-success"
+  br/
+
+
+= form_tag("/shopping_carts/pay_page", method: "post" ) do
+  .panel.panel-default
+    .panel-heading
+      .panel-title #{t('.shipping')}
+    .panel-body
+      div style="font-size: 12px;"
+      br/
+      - if @shopping_cart.additional_informartion_message.present?
+        = text_area_tag "message", @shopping_cart.additional_informartion_message.message, style: "width: 100%; height: 150px;"
+      - elsif params[:message].present?
+        = text_area_tag "message", params[:message], style: "width: 100%; height: 150px;"
+      - else
+        = text_area_tag "message", "", style: "width: 100%; height: 150px;"
+      = hidden_field_tag "item_id", @shopping_cart.shopping_cart_items.first.item_id rescue nil
+      = hidden_field_tag "shopping_cart_id", @shopping_cart.id
+      = hidden_field_tag "order_id", params[:shopping_cart_id]
+  .col-md-4
+  .col-md-8
+    div style="text-align: right;"
+      = hidden_field_tag "shopping_cart_id", @shopping_cart.id
+      = submit_tag "Create New Order", class: "btn btn-success"
+      br/
+      | Current price: 
+      b
+        - subtotal = @shopping_cart.shopping_cart_items.map{ |item| item.quantity*item.price}.sum
+        = "#{convert_float_to_decimal(calculate_total(@shopping_cart).round(6))} BTC"

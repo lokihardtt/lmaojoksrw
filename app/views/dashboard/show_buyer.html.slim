@@ -1,0 +1,56 @@
+= link_to "Edit", edit_user_registration_path, class: "btn btn-default"
+- if current_user.role.eql?"Vendor"
+  h2 #{t('.vendor')}
+- else
+  h2 #{t('.buyer')}
+
+table
+  tr
+    td
+      | #{t('.address')}
+    td
+      | &nbsp; &nbsp; &nbsp;
+    td
+      = @bitcoin_address
+  tr
+    td
+      | #{t('.balance')}
+    td
+      | &nbsp; &nbsp; &nbsp;
+    td
+      = @bitcoin_balance
+  tr
+    td
+      | #{t('.lokasi')}
+    td
+      | &nbsp; &nbsp; &nbsp;
+    td
+      = @user.location
+  tr
+    td
+      | #{t('.local')}
+    td
+      | &nbsp; &nbsp; &nbsp;
+    td
+      = @user.currency
+  tr
+    td
+      | #{t('.date')}
+    td
+      | &nbsp; &nbsp; &nbsp;
+    td
+      = @user.created_at.strftime("%d %B %Y")
+  tr
+    td
+      | #{t('.public')}
+    td
+      | &nbsp; &nbsp; &nbsp;
+    td
+      = @publickey.html_safe rescue "#{t('.key')}"
+  tr
+    td
+      | #{t('.last')}
+    td
+      | &nbsp; &nbsp; &nbsp;
+    td
+      = distance_of_time_in_words_to_now(@user.last_sign_in_at)

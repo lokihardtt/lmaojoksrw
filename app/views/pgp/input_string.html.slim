@@ -1,0 +1,21 @@
+.alert.alert-info role="alert"
+  - unless params[:id_auth]
+    | You are trying to sign in without password.. 
+
+  | Please copy the random password and decrypt in your local computer and paste to box to sign in.
+.col-md-12
+  .jumbotron
+    = @read_random_string.html_safe
+.col-md-4
+
+.col-md-12
+  = form_tag("/pgp/check_random_string", method: "post" ) do
+    div
+      | Your Indentifier
+    br/
+    div
+      = password_field_tag "string_indentifier", "", class: "form-control"
+      = hidden_field_tag "username", params[:username]
+    br/
+    div
+      = submit_tag "Submit", class: "btn btn-default btn-1"

@@ -1,0 +1,127 @@
+/ .alert.alert-danger role="alert"
+/   | We only show orders with 3 or more bitcoin network confirmations. If you order does not show it may still be waiting for confirmations.
+
+h2 Waiting for approval by vendor
+br/
+- @pending_orders.group_by{|order| [order.shopping_cart_id, order.item.user_id] }.each do |keys, values|
+  - @message = get_shipping_information(values.first)
+  table.table.table-bordered
+    tr
+      td ID
+      td colspan="3"
+        = keys.first
+    tr
+      td colspan="4"
+        = "Order Created : #{values.first.created_at.strftime('%Y-%m-%d %I:%M%p') rescue nil} GMT"
+    tr
+      td Items
+      td Vendor
+      td Total Price
+      td Auto Cancel
+    - values.each do |pending|
+      tr
+        td
+          li style="margin-left: 10px;"
+            | #{pending.quantity} x #{link_to "#{pending.product_name}", item_detail_url(pending.item.random_string)} = #{float_to_decimal(total(pending))}
+            br
+            | + #{pending.shipping_option.name rescue nil} - #{pending.shipping_option.price rescue nil} #{pending.shipping_option.currency rescue nil}
+        td
+          | #{link_to "#{pending.item.user.username}", new_private_message_path(receiver_id: pending.item.user.id)}
+        td
+          | #{float_to_decimal(pending.total_payment).to_f.round(5)} BTC
+        td
+          = distance_of_time_in_words(@four_day_ago, pending.updated_at)
+    tr
+      td colspan="4"
+        .jumbotron
+          - if @message.present?
+            = @message.html_safe
+
+= paginate @pending_orders
+br/        
+h2 Waiting to be sent by vendor
+br/
+- @shipped_orders.group_by{|order| [order.shopping_cart_id, order.item.user_id] }.each do |keys, values|
+  - @message = get_shipping_information(values.first)
+  table.table.table-bordered
+    tr
+      td ID
+      td colspan="2"
+        = keys.first
+    tr
+      td colspan="3"
+        = "Order Created : #{values.first.created_at.strftime('%Y-%m-%d %I:%M%p') rescue nil} GMT"
+    tr
+      td Items
+      td Vendor
+      td Total Price
+    - values.each do |ship|
+      tr
+        td
+          | #{ship.quantity} x #{link_to "#{ship.product_name}", item_detail_url(ship.item.random_string)}
+          br
+          | + #{ship.shipping_option.name rescue nil} - #{ship.shipping_option.price rescue nil} #{ship.shipping_option.currency rescue nil}
+        td
+          | #{link_to "#{ship.item.user.username}", new_private_message_path(receiver_id: ship.item.user.id)}
+        td
+          = "#{float_to_decimal(ship.total_payment).to_f.round(6)} BTC"
+          br/
+          = "#{convert_to_btc(current_user.currency, float_to_decimal(ship.total_payment)).to_f.round(6)} #{current_user.currency}"
+    tr
+      td colspan="4"
+        .jumbotron
+          - if @message.present?
+            = @message.html_safe
+
+= paginate @shipped_orders
+br/
+
+h2 Sent and waiting your feedback
+br/
+table.table.table-bordered
+  - @sent_orders.group_by{|order| [order.shopping_cart_id, order.item.user_id] }.each do |keys, values|
+    tr
+      td ID
+      td colspan="2"
+        = keys.first
+    tr
+      td colspan="3"
+        = "Order Created : #{values.first.created_at.strftime('%Y-%m-%d %I:%M%p') rescue nil} GMT"
+    tr
+      td Items
+      td Vendor
+      td Total Price
+    - values.each do |sent|
+      tr
+        td
+          li style="margin-left: 10px;"
+            | #{sent.quantity} x #{link_to "#{sent.product_name}", item_detail_url(sent.item.random_string)} = #{float_to_decimal(sent.total_payment).to_f.round(5)}
+            br
+            | + #{sent.shipping_option.name rescue nil} - #{sent.shipping_option.price rescue nil} #{sent.shipping_option.currency rescue nil}
+        td
+          | #{link_to "#{sent.item.user.username}", new_private_message_path(receiver_id: sent.item.user.id)}
+        td
+          | #{float_to_decimal(sent.total_payment).to_f.round(6)} BTC
+      - if sent.feedback_comment
+        tr
+          td colspan="2"
+            | Feedback:
+            br
+            = sent.feedback_comment
+          td
+            | Rating
+            br
+            = sent.rating
+
+    = simple_form_for :purchase_finalize_order, url: finalize_order_path, method: :post do |f|
+      tr
+        td Feedback:
+        td style="width: 441px;"
+          = hidden_field_tag "purchase_id", keys.first
+          = hidden_field_tag "vendor_id", keys.last
+          = text_field_tag "feedback", "", placeholder: "Enter Feedback (publicly visible, cannot change later)", style: "width: 100%;"
+        td colspan="3"
+          = select_tag "rating", options_for_select([5, 4, 3, 2, 1, 0])
+      tr.borderless
+        td colspan="5" align="right"
+          = f.submit "Leave Feedback", class: "btn btn-success"

@@ -1,0 +1,28 @@
+br/
+br/
+h4 Withdraw Funds
+.col-md-12
+	= form_tag("/admin/dashboard/withdraw_funds", method: "post" ) do
+	  .col-md-2 style="text-align: left;"
+	    | Amount to withdraw:
+	  .col-md-10
+	    = text_field_tag "amount", '', placeholder: "0.000000", style: "width: 130px;", required: true, class: "string float optional form-control"
+	  div style="clear: both;"
+	  br/
+	  .col-md-2 style="text-align: left;"
+	    | Withdraw to:
+	  .col-md-10
+	    = text_field_tag "bitcoin_address", '', placeholder: "Your Bitcoin address", style: "width: 350px;", required: true, class: "string url optional form-control"
+	  div style="clear: both;"
+	  br/
+	  .col-md-2 style="text-align: left;"
+	    | Password:
+	  .col-md-10
+	    = password_field_tag "password", '', placeholder: "Your Password", style: "width: 250px;", required: true, class: 'password optional form-control'
+	  div style="clear: both;"
+	  br/
+	  .col-md-2
+	  .col-md-10
+	    = submit_tag "Withdraw funds", class: "btn btn-default btn-success"
+	div style="clear: both;"
+	br/

@@ -1,0 +1,24 @@
+.jumbotron
+  h1 #{t('.title')}
+
+  br
+  
+  p 
+    | #{t('.text')}
+  ul
+    - if user_signed_in?
+      li = link_to "#{t('.text1')}"
+      li = link_to "#{t('.text2')}"
+      li = link_to "#{t('.text3')}"
+      li = link_to "#{t('.text4')}"
+    - else
+      li
+        = link_to "Forum", "https://openfreemarket.com/"
+      li
+        = link_to "Code", "https://gitlab.com/stevez00/openfreemarket"
+      li
+        = "Donate"
+        br/
+        | Send your donation to this address "13vGYspVth7AqV4vMdE3Sam448mPWerRsR" or scan the QRCode
+        br/
+        = image_tag image_path("https://i.imgur.com/ZyTOsMn.png")

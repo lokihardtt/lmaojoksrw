@@ -1,0 +1,6 @@
+.well
+  | Inbox
+
+- unless current_user.role.eql?"Support"
+  h4 New
+  == render 'form'

@@ -1,0 +1,13 @@
+H1 #{t('.trash_title')}
+ul
+- if @trash.present?
+  - @trash.each do |trash|
+    li
+      = link_to trash.subject, conversation_path(trash)
+      | &nbsp;
+      - if trash.is_completely_trashed?(current_user)
+        = link_to "#{t('.untrash')}", untrash_conversation_path(trash), method: :post
+      - else
+        = link_to "#{t('.trash')}", trash_conversation_path(trash), method: :post
+- else
+  = "#{t('.empty')}"

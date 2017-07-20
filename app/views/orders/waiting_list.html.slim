@@ -1,0 +1,47 @@
+= link_to "Mark orders approved and sent", approve_and_sent_orders_path
+br
+br
+- @pendings.each do |pending|
+  - @message = get_shipping_information(pending)
+  table.table.table-bordered
+    tr
+      td = link_to pending.user.username, new_private_message_path(receiver_id: pending.user_id)
+    - total = pending.quantity * pending.item.price
+    - if pending.shopping_cart.additional_informartion_message.present?
+      - @message = pending.shopping_cart.additional_informartion_message.message.gsub(/\n/, '<br/>')
+    tr
+      td
+        li style="margin-left: 10px;"
+          | #{pending.quantity} x #{pending.item.name}
+    
+    tr
+      td 
+        | Shipping Information
+        .jumbotron
+          - if @message.present?
+            = @message.html_safe
+
+= paginate @pendings
+
+- @shippeds.each do |shipped|
+  - @message = get_shipping_information(shipped)
+  table.table.table-bordered
+    tr
+      td = link_to shipped.user.username, new_private_message_path(receiver_id: shipped.user_id)
+      - total = shipped.quantity * shipped.item.price
+    - if shipped.shopping_cart.additional_informartion_message.present?
+      - @message = shipped.shopping_cart.additional_informartion_message.message.gsub(/\n/, '<br/>')
+    tr
+      td
+        li style="margin-left: 10px;"
+          | #{shipped.quantity} x #{shipped.item.name}
+    
+    tr
+      td 
+        | Shipping Information
+        .jumbotron
+          - if @message.present?
+            = @message.html_safe
+
+= paginate @shippeds
+

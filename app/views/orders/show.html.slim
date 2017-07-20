@@ -1,0 +1,15 @@
+p#notice = notice
+
+p
+  strong User:
+  = @purchase.user_id
+p
+  strong Item:
+  = @purchase.item_id
+p
+  strong Status:
+  = @purchase.status
+
+= link_to 'Edit', edit_purchase_path(@purchase)
+'|
+= link_to 'Back', purchases_path

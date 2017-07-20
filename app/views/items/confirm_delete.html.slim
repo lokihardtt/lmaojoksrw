@@ -1,0 +1,12 @@
+- if @item.present?
+  | Are you sure you want to delete #{@item.name}?
+  br/
+  = link_to "Delete", destroy_item_path(id: @item.id), :method => :get, class: "btn btn-danger"
+  | &nbsp; &nbsp;
+  = link_to "Cancel", items_path, class: "btn btn-default", :"data-no-turbolink" => "true"
+- else
+  | Are you sure you want to delete #{@shipping_option.name}?
+  br/
+  = link_to "Delete", destroy_shipping_option_path(id: @shipping_option.id), :method => :get, class: "btn btn-danger"
+  | &nbsp; &nbsp;
+  = link_to "Cancel", shipping_option_list_path, class: "btn btn-default", :"data-no-turbolink" => "true"

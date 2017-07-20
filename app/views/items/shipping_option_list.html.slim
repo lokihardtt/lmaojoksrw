@@ -1,0 +1,25 @@
+- if notice
+  p#notice.alert.alert-success 
+    = notice
+
+- unless @shipping_options.present?
+  | #{t('.text4')}
+  = link_to "#{t('.text5')}", shipping_option_new_url
+  | #{t('.text6')}
+
+table.table.table-bordered#list-item-all
+  tr
+    td #{t('.name')}
+    td #{t('.price')}
+    td #{t('.option')}
+
+  - @shipping_options.each do |shipping_option|
+  	tr
+      td
+        = shipping_option.name
+      td
+        = shipping_option.price
+      td
+        = link_to "#{t('.edit')}", shipping_option_edit_path(shipping_option)
+        | , 
+        = link_to "Delete", confirm_delete_path(shipping_option_id: shipping_option.id), :"data-no-turbolink" => "true"

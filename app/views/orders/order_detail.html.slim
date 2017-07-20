@@ -1,0 +1,13 @@
+h1 Order Details: #{@order.id}
+
+table.table.table-condensed
+  th
+    td colspan="3"
+      b
+        | Order with #{@order.user.username} :
+  tr
+    td 1
+    td 
+      = link_to "#{@order.item.name}", item_url(@order.item.id)
+    td
+      | #{@order.item.user.currency} #{@order.item.price_with_precision}

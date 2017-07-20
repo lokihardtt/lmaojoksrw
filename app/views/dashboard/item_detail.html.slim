@@ -1,0 +1,111 @@
+p#notice = notice
+
+- if params[:quantity].present?
+  .alert.alert-danger role="alert" id="alert-box"
+    | Sorry the quantity of item cannot process your order.
+- elsif params[:min].present?
+  .alert.alert-danger role="alert" id="alert-box"
+    | Sorry your quantity order must be equal 1 or higger than 1
+- elsif params[:price].present?
+  .alert.alert-danger role="alert" id="alert-box"
+    | #{t('.alert1')}
+- elsif params[:shopping_cart_id].present? && params[:diff].present?
+  .alert.alert-danger role="alert" id="alert-box"
+    | #{t('.alert2')}
+  .alert.alert-warning role="alert" id="alert-box"
+    | #{t('.alert3')} #{link_to "#{t('.here')}", shopping_cart_path(shopping_cart_id: params[:order_id]), :"data-no-turbolink" => "true"}
+- elsif params[:shopping_cart_id].present?
+  .alert.alert-warning role="alert" id="alert-box"
+    | #{t('.alert3')} #{link_to "#{t('.here')}", shopping_cart_path(shopping_cart_id: params[:order_id]), :"data-no-turbolink" => "true"}
+
+h2
+  div style="float:left;"
+    strong
+      = "#{@item.name}"
+    | &nbsp;
+  div style="color: #428bca;"
+    = link_to "#{@item.user.username}", show_sender_detail_path(user_id: @item.user.id)
+p
+  = "#{@item.categories.first.name rescue 'no categories'} -> #{@item.name}"
+
+.panel.panel-default
+  .panel-body
+    = simple_form_for :add_order, url: shopping_cart_path, method: :post, :html => { :style => 'text-align: center;'}  do |f|
+      .col-md-3 
+        strong
+          - if (@item.currency.eql?"Bitcoin") || (@item.currency.eql?"BTC")
+            = "#{@item.price_with_precision.to_f.round(5)} #{@item.currency}"
+          - else
+            - if (current_user.currency.eql?"Bitcoin") || (current_user.currency.eql?"BTC")
+              - group = @rates.select { |element_hash| element_hash["code"].eql?"#{@item.currency}" }
+              - @price = @item.price.to_f / group.first['rate'].to_f
+              | &nbsp; &nbsp; &nbsp;
+              = "#{convert_float_to_decimal(convert_float_to_decimal(@price).to_f.round(5))} BTC"
+            - else
+              - if current_user.currency.eql?"United States Dollar"
+                - current_user.currency = "USD"
+              - elsif current_user.currency.eql?"Indonesian Rupiah"
+                - current_user.currency = "IDR"
+              - group = @rates.select { |element_hash| element_hash["code"].eql?"#{@item.currency}" }
+              - group_local = @rates.select { |element_hash| element_hash["code"].eql?"#{current_user.currency}" }
+              - @price = @item.price.to_f / group.first['rate'].to_f
+              - @price_local = @price.to_f * group_local.first['rate'].to_f
+              | &nbsp; &nbsp; &nbsp;
+              = "#{convert_float_to_decimal(convert_float_to_decimal(@price).to_f.round(5))} BTC"
+              br/
+              | &nbsp; &nbsp; &nbsp;
+              = "#{convert_float_to_decimal(convert_float_to_decimal(@price_local).to_f.round(5))} #{current_user.currency}"
+          br/
+      | &nbsp; #{t('.add')}
+      = hidden_field_tag "item_id", @item.id
+      = hidden_field_tag "shopping_cart_id", params[:shopping_cart_id]
+      = text_field_tag "quantity", '1', type: :number, required: true
+      - if @item.unlimited
+        | this item is unlimited
+      - else
+        = "/ #{@item.quantity} #{t('.available')}, #{t('.ship')} "
+      = select_tag "shipping", options_for_select(@data)
+      | &nbsp;
+      = f.submit "#{t('.add_order')}", class: "btn btn-success"
+
+.col-md-3
+  div style="text-align: right;"
+    = "#{@item.price_with_precision} #{@item.currency} #{t('.each')}"
+    br/
+    = "#{t('.ship_from')} #{@item.country.name rescue nil}"
+    br/
+    - if @item.unlimited
+      | this item is unlimited
+    - else
+      = "#{@item.quantity} #{t('.available')}"
+
+.col-md-6
+  .col-sm-12
+    div
+      - if @item.galleries.any?
+        .thumbnail
+          = image_tag show_image(@item.galleries.first.image.thumb.url), class: "lazy"
+      - else
+        .thumbnail style="height: 149px; width: 238px;"
+          = image_tag image_path('no_image_w_large.gif')
+      = link_to "#{t('.click')}", show_full_image_path(@item.random_string), target: "_blank"
+      br
+      = @item.description.html_safe
+    br/
+    br/
+    div
+      span
+        b Feedbacks/Review
+      ul
+        - @orders.each do |order|
+          - if order.feedback_comment.present?
+            li = order.feedback_comment
+      = paginate @orders
+.col-md-3
+  - if current_user.role.eql?"Buyer"
+    = link_to "#{t('.message')} #{@item.user.username}", new_private_message_path(receiver_id: @item.user_id), class: "btn btn-default"
+  - else
+    = link_to "#{t('.message')} #{@item.user.username}", "javascript:void(0);", class: "btn btn-default"
+
+div style="clear: both;"
+br/

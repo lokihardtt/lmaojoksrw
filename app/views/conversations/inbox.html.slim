@@ -1,0 +1,15 @@
+H1 #{t('.inbox')}
+ul
+- if @inbox.present?
+  - @inbox.each do |inbox|
+    li
+      = link_to inbox.subject, conversation_path(inbox)
+      | &nbsp;
+      - if inbox.is_completely_trashed?(current_user)
+        = link_to "#{t('.untrash')}", untrash_conversation_path(inbox), method: :post
+      - else
+        = link_to "#{t('.trash')}", trash_conversation_path(inbox), method: :post
+- else
+  = "#{t('.empty')}"
+br/
+/ = link_to 'Send Email', :new_conversation

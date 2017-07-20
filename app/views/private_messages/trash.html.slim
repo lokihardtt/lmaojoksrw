@@ -1,0 +1,12 @@
+h1 Trash
+ul
+- if @senders.present?
+  - @senders.each do |sender|
+    - unless sender.username.eql? current_user.username
+      li
+        = link_to "#{sender.username}", reply_path(sender_id: sender.id)
+        | &nbsp; &nbsp; | &nbsp; &nbsp;
+        = link_to "Untrash", untrash_path(sender_id: sender.id)
+- else
+  = "Your inbox is empty"
+br/

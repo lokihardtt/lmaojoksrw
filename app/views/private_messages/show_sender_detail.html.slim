@@ -1,0 +1,15 @@
+b = @sender.username
+br/
+= "Description : #{@sender.description}"
+br/
+| Public Key
+br/
+- if @publickey.present?
+  = text_area_tag :pgp_key, @publickey.gsub("<br/>","\n"), style: "height: 625px; width: 100%;", class: "text optional form-control"
+- else
+  = "Sorry this user not upload PGP public key"
+br/
+- if @sender.role.eql?"Vendor"
+  = link_to "See All Item of Vendor", vendor_item_url(vendor_id: @sender.id)
+| &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+= link_to "Send Message to #{@sender.username}", new_private_message_path(receiver_id: @sender.id), class: "btn btn-default"

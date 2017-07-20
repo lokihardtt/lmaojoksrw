@@ -1,0 +1,110 @@
+= link_to "Show all new and waiting to be shipped orders", waiting_list_path
+
+h3 New orders, waiting for your approval
+| List sorted by customer username
+- @pendings.group_by{ |order| [order.shopping_cart_id, order.item.user_id] }.each do |keys, values|
+  - @message = get_shipping_information(values.first)
+  table.table.table-bordered
+    tr
+      Td ID
+      td colspan="3"
+        = keys.first
+    tr
+      Td Items
+      Td Customer
+      Td Total Price
+    - values.each do |pending|
+      - total = pending.quantity * pending.item.price
+      tr
+        td
+          li style="margin-left: 10px;"
+            | #{pending.quantity} x #{pending.product_name}
+            br
+            | + #{pending.shipping_option.name rescue nil} - #{pending.shipping_option.price rescue nil} #{pending.shipping_option.currency rescue nil}
+        td
+          | #{link_to "#{pending.user.username}", new_private_message_path(receiver_id: pending.user_id)}
+        td
+          | #{float_to_decimal(pending.total_payment).to_f.round(6)} BTC
+    tr
+      td colspan="4"
+        .jumbotron
+          - if @message.present?
+            = @message.html_safe
+    tr
+      td Auto Cancel
+      td
+        = distance_of_time_in_words(@four_day_ago, values.first.updated_at)
+      td style="text-align:center;"
+        = link_to "Approve", order_shipped_order_url(order_id: keys.first)
+        br
+        = link_to "Cancel", order_cancel_order_url(order_id: keys.first)
+
+= paginate @pendings
+
+h3 Waiting to be shipped
+| List sorted by customer username
+- @shippeds.group_by{ |order| [order.shopping_cart_id, order.item.user_id] }.each do |keys, values|
+  table.table.table-bordered
+    tr
+      Td ID
+      td colspan="3"
+        = keys.first
+    tr
+      Td Items
+      Td Customer
+      Td Total Price
+    - values.each do |shipped|
+      - total = shipped.quantity * shipped.item.price
+      - if shipped.shopping_cart.additional_informartion_message.present?
+        - @message = shipped.shopping_cart.additional_informartion_message.message.gsub(/\n/, '<br/>')
+      tr
+        td
+          li style="margin-left: 10px;"
+            | #{shipped.quantity} x #{shipped.product_name}
+            br
+            | + #{shipped.shipping_option.name rescue nil} - #{shipped.shipping_option.price rescue nil} #{shipped.shipping_option.currency rescue nil}
+        td
+          | #{link_to "#{shipped.user.username}",  new_private_message_path(receiver_id: shipped.user_id)}
+        td
+          | #{float_to_decimal(shipped.total_payment).to_f.round(6) rescue nil} BTC
+    tr
+      td colspan="4"
+        .jumbotron
+          - if @message.present?
+            = @message.html_safe
+    tr
+      td style="text-align: right;" colspan="4"
+        br/
+        = link_to "Refund", form_refund_path(shopping_cart_id: keys.first)
+        = form_tag("/sent_order", method: "post" ) do
+          = text_field_tag "order_id", keys.first, style: "display: none;"
+          / = text_field_tag "tracking_number", "", placeholder: "Optional tracking Number", style: "width: 275px;"
+          / | &nbsp; &nbsp; &nbsp;
+          / | &nbsp; &nbsp; &nbsp;
+          = submit_tag "Mark order as sent", class: "btn btn-success"
+
+= paginate @shippeds
+
+h3 Sent, and waiting to be finalised by customer
+| List sorted by customer username
+- @sents.group_by{ |order| [order.shopping_cart_id, order.item.user_id] }.each do |keys, values|
+  table.table.table-bordered
+    tr
+      Td ID
+      td colspan="3"
+        = keys.first
+    tr
+      Td Items
+      Td Customer
+      Td Total Price
+    - values.each do |sent|
+      - total = sent.quantity + sent.item.price
+      tr
+        td
+          li style="margin-left: 10px;"
+            | #{sent.quantity} x #{sent.product_name}
+        td
+          | #{link_to "#{sent.user.username}", new_private_message_path(receiver_id: sent.user_id)}
+        td
+          | #{float_to_decimal(sent.total_payment).to_f.round(6)} BTC
+= paginate @sents

@@ -1,0 +1,51 @@
+- if notice
+  #notice.alert.alert-success 
+    = notice
+
+table.table.table-bordered#list-item-all
+  tr
+    th #{t('.name')}
+    th #{t('.price')}
+    th #{t('.views')}
+    th #{t('.quantity')}
+    th #{t('.hidden')}
+    th
+    th #{t('.option')}
+  - @items.each  do |item|
+    tr
+      td style="width: 200px;"
+        = link_to "#{item.name}", item_detail_url(item.random_string), :"data-no-turbolink" => "true"
+      td
+        = "#{item.price_with_precision} #{item.currency}"
+      td
+        = item.impressionist_count
+      td
+        - if item.unlimited
+          | This item is unlimited
+        - else
+          = item.quantity
+
+      td
+        - if item.is_hidden.eql? false 
+          = "No"
+        - else
+          = "Yes"
+      td
+        - if item.galleries.any?
+          - item_image_url = item.galleries.first.image.thumb.url
+          = image_tag show_image(item_image_url), class: "lazy"
+        - else
+          = image_tag image_path('no_image_w_large.gif'), style: "height: 125px; width: 170px;"
+      td
+        = link_to "#{t('.edit')}", edit_item_path(item), :"data-no-turbolink" => "true"
+        | &nbsp; | &nbsp;
+        = link_to "#{t('.copy')}", copy_item_path(item_id: item.id), class: "copy_item"
+        - if item.is_hidden.eql? false 
+          | &nbsp; | &nbsp;
+          = link_to "#{t('.hide')}", change_status_path(item_id: item.id, item_status: true), class: "hide_item"
+        - else
+          | &nbsp; | &nbsp;
+          = link_to "#{t('.unhide')}", change_status_path(item_id: item.id, item_status: false), class: "hide_item"
+        | &nbsp; | &nbsp;
+        = link_to "#{t('.delete')}", confirm_delete_path(item_id: item.id), :"data-no-turbolink" => "true"
+= paginate @items

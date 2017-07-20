@@ -1,0 +1,10 @@
+= simple_form_for :conversation, url: :conversations, :defaults => { :wrapper_html => {:class => 'form-group'}, :input_html => { :class => 'form-control' } } do |f|
+  .field
+    = f.input :recipient, input_html: { value: ("#{@recipient.username}"), readonly: true }
+    = f.input :subject
+    = f.input :body, as: :text
+    - if @file.eql?false
+    - else
+      = f.input :encrypted, as: :boolean, input_html: { class: 'boolean optional'}
+    .form-actions
+      = f.submit "Send message", class: 'btn btn-primary'

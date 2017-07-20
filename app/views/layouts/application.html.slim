@@ -1,0 +1,174 @@
+DOCTYPE html
+html
+  head
+    title = @market_name.name rescue "Openfreemarkettest"
+    = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true
+    script src="//gitcdn.org/libs/bitcoinate/0.2.1/index.min.js" 
+    = csrf_meta_tags
+  BODY
+    .navbar.navbar-inverse.navbar-fixed-top role="navigation" 
+      .container
+        .navbar-header
+          button.navbar-toggle data-target=".navbar-collapse" data-toggle="collapse" type="button" 
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          div style="margin-top: 14px; margin-left: 18px;"
+            b
+              - if user_signed_in?
+                - if current_user.role.eql?("Buyer")
+                  = link_to "#{@market_name.name rescue Openfreemarkettest}", dashboard_path, :"data-no-turbolink" => "true", style: "color: #777;"
+                - elsif current_user.role.eql?("Vendor")
+                  = link_to "#{@market_name.name rescue Openfreemarkettest}", dashboard_vendor_path, :"data-no-turbolink" => "true", style: "color: #777;"
+                - else
+                  = link_to "#{@market_name.name rescue Openfreemarkettest}", home_path, style: "color: #777;"
+              - else
+                = link_to "#{@market_name.name rescue Openfreemarkettest}", home_path, style: "color: #777;"
+        - if user_signed_in?
+          - if current_user.role.eql?("Buyer")
+            .pull-right
+              .collapse.navbar-collapse
+                ul.nav.navbar-nav
+                  li.phrase
+                    = current_user.phrase rescue nil
+                  - if (current_user.identifier.blank?) && (@blockchain_payment_method.status.eql?true)
+                    li
+                      = link_to "Create Wallet", new_wallet_url
+                  li
+                    = link_to "Cart (#{@cart.shopping_cart_items.count rescue 0})", shopping_cart_path(shopping_cart_id: params[:shopping_cart_id])
+                  li
+                    = link_to "#{t('.message')}(#{@message_not_read_count})", private_messages_path, :"data-no-turbolink" => "true"
+                  li
+                    = link_to "Account", bitcoin_account_url, :"data-no-turbolink" => "true"
+                  li
+                    = link_to "Orders", orders_url, :"data-no-turbolink" => "true"
+                  li
+                    = link_to "#{t('.account')}", edit_user_registration_path
+                  - if @support_link && @support_link.disabled.eql?(false)  
+                    li
+                      = link_to "Support", support_contact_path
+                  li
+                    = link_to "#{t('.logout')}", destroy_user_session_path
+          - elsif current_user.role.eql?("Vendor")
+            .pull-right
+              .collapse.navbar-collapse
+                ul.nav.navbar-nav
+                  li.phrase
+                    = current_user.phrase
+                  - if (current_user.identifier.blank?) && (@blockchain_payment_method.status.eql?true)
+                    li
+                      = link_to "Create Wallet", new_wallet_url
+                  li
+                    = link_to "Items", items_url
+                  li
+                    = link_to "#{t('.message')}(#{@message_not_read_count})", private_messages_path, :"data-no-turbolink" => "true"
+                  li
+                    = link_to "Orders(#{@order_count})", orders_list_path, :"data-no-turbolink" => "true"
+                  li
+                    = link_to "Account", bitcoin_account_url
+                  li
+                    = link_to "#{t('.account')}", edit_user_registration_path
+                  - if @check_invite.eql?true
+                    li
+                      = link_to "Invite new Buyer", invite_new_buyer_path
+                  - if @support_link && @support_link.disabled.eql?(false)  
+                    li
+                      = link_to "Support", support_contact_path
+                  li
+                    = link_to "#{t('.logout')}", destroy_user_session_path
+          - elsif current_user.role.eql?("Support")
+            .pull-right
+              .collapse.navbar-collapse
+                ul.nav.navbar-nav
+                  li.phrase
+                    = current_user.phrase
+                  li
+                    = link_to "#{t('.message')}(#{@message_not_read_count})", private_messages_path, :"data-no-turbolink" => "true"
+                  li
+                    = link_to "#{t('.logout')}", destroy_user_session_path
+        - else
+          .pull-right
+            .collapse.navbar-collapse
+              ul.nav.navbar-nav
+                / - if @check_en_languange.eql?true
+                /   li
+                /     = link_to "EN", locale: 'en'
+                / - if @check_id_languange.eql?true
+                /   li
+                /     = link_to "ID", locale: 'id'
+                li
+                  = link_to "#{t('.login')}", new_user_session_path
+                - unless @check_invite_buyer
+                  li
+                    = link_to "Sign up Buyer", new_user_registration_path
+                - unless @check_invite_vendor
+                  li
+                    = link_to "Sign up Vendor", vendor_sign_up_path
+    .container
+      .row
+        .startert-template
+          div style="margin-top: 60px;"
+            - if user_signed_in?
+              - if controller_name == "dashboard" && action_name == "item_detail"
+                .col-md-12.col-sm-12
+                  .panel.panel-default style="border: none;"
+                    .panel-body
+                      #notice
+                        - if notice
+                          .alert.alert-success 
+                            = notice
+                      #alert
+                        -if alert 
+                          .alert.alert-danger
+                            = alert
+                      = yield
+              - elsif current_user.role.eql?"Support"
+                .col-md-12.col-sm-12
+                  .panel.panel-default style="border: none;"
+                    .panel-body
+                      #notice
+                        - if notice
+                          .alert.alert-success 
+                            = notice
+                      #alert
+                        -if alert 
+                          .alert.alert-danger
+                            = alert
+                      = yield
+              - else
+                .col-md-3.col-sm-3
+                  == render 'layouts/side_menu_vendor'
+                .col-md-9.col-sm-9
+                  - if controller_name == "items"
+                    = yield
+                  - else
+                    .panel.panel-default style="border: none;"
+                      .panel-body
+                        #notice
+                          - if notice
+                            .alert.alert-success 
+                              = notice
+                        #alert
+                          -if alert 
+                            .alert.alert-danger
+                              = alert
+                        = yield
+
+              .col-md-12.col-sm-12
+                - @rates.each do |group|
+                  - if group['code'].eql?("BTC") || group['code'].eql?(current_user.currency)
+                    .col-md-2 
+                      = "#{group['code']} : #{group['rate']}" 
+                      | &nbsp; &nbsp;
+            - else
+              #notice
+                - if notice 
+                  .alert.alert-success
+                    = notice
+              #alert
+                - if alert 
+                  .alert.alert-danger
+                    = alert
+              = yield
+              

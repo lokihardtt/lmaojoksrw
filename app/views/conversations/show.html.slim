@@ -1,0 +1,8 @@
+h1 Subject #{conversation.subject}
+ul
+  = content_tag_for(:li, conversation.receipts_for(current_user)) do |receipt|
+    - message = receipt.message
+    - name = User.find(message.sender_id)
+    h3 = name.username
+    p = message.body
+= render 'messages/form', conversation: conversation

@@ -1,0 +1,18 @@
+p#notice = notice
+
+p
+  strong Sender:
+  = @private_message.sender_id
+p
+  strong Receiver:
+  = @private_message.receiver_id
+p
+  strong Body:
+  = @private_message.body
+p
+  strong Status:
+  = @private_message.status
+
+= link_to 'Edit', edit_private_message_path(@private_message)
+'|
+= link_to 'Back', private_messages_path
